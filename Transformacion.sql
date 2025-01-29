@@ -53,7 +53,7 @@ CREATE TABLE usuario
   , PRIMARY KEY(cedula)
   );
 
-/*Relaciones */
+--Relaciones 
 
 CREATE TABLE accede 
   ( usuario_cedula INTEGER
@@ -190,6 +190,57 @@ WHERE cedula = 26454785;
 DELETE FROM usuario     
 WHERE cedula = 5587458 OR cedula = 12154545;
 
+--View
+
+CREATE VIEW V_PELICULAS AS
+                    
+	SELECT * FROM V_PELICULAS; 
+	
+  SELECT 
+    p.titulo, 
+    p.sinopsis, 
+    v.anio, 
+    v.idioma,
+    d.nombre AS nombre_director,
+    d.codigo AS codigo_director,
+    d.fecha_nac,
+    d.apellido AS apellido_director,
+    d.tipo,
+    e.numero,
+    e.formato,
+    e.observaciones,
+    e.codigo AS codigo_ejemplar,
+    u.cedula,
+    u.nombre AS nombre_usuario,
+    u.apellido AS apellido_usuario,
+    u.telefono,
+    a.usuario_cedula,
+    a.fecha_acceso,
+    a.fecha_terminacion,
+    a.ejemplar_numero,
+    a.ejemplar_codigo
+    
+	FROM 
+    pelicula AS p 
+  	INNER JOIN 
+  version AS v 
+    ON p.titulo = v.titulo 
+	INNER JOIN 
+    director AS d
+    ON d.codigo = p.codigo
+	INNER JOIN
+    ejemplar AS e
+  	ON e.codigo = v.codigo
+	INNER JOIN
+    accede AS a
+	ON a.ejemplar_numero = e.numero
+	INNER JOIN
+    usuario AS u
+  ON u.cedula = a.usuario_cedula
+	
+;
+   
+--Trigger   
 
 CREATE OR REPLACE FUNCTION handle_acceder_insertion() RETURNS TRIGGER AS $$
   BEGIN
